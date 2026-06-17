@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Қазақстан Тарихы</title>
+    <style>
+        /* НЕГІЗГІ ТҮСТЕР МЕН ФОН */
+        :root {
+            --dark-blue: #1a2b4c;
+            --gold: #d4af37;
+            --parchment: #fdf6e3;
+            --text-dark: #2c3e50;
+        }
+
+        body {
+            font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--parchment);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* БАСҚАРУ ПАНЕЛІ (МӘЗІР) */
+        header {
+            background-color: var(--dark-blue);
+            color: var(--gold);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--gold);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.8em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #121e36;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: white;
+            padding: 15px 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        nav button:hover, nav button.active {
+            background-color: var(--gold);
+            color: var(--dark-blue);
+        }
+
+        /* БЕТТЕРДІҢ КОНТЕЙНЕРІ */
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 30px;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            min-height: 600px;
+        }
+
+        .page-section {
+            display: none;
+        }
+
+        h2 {
+            color: var(--dark-blue);
+            border-bottom: 2px dashed var(--gold);
+            padding-bottom: 10px;
+            text-align: center;
+            font-size: 2em;
+            margin-top: 0;
+        }
+
+        h3.section-title {
+            background-color: var(--dark-blue);
+            color: var(--gold);
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        /* БАСТЫ БЕТ - ОҚИҒА БЛОГЫ */
+        .story-box {
+            background-color: var(--parchment);
+            border-left: 6px solid var(--gold);
+            padding: 20px 30px;
+            margin: 30px 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+        }
+        .story-box h3 {
+            color: var(--dark-blue);
+            font-style: normal;
+            margin-top: 0;
+        }
+
+        /* ХРОНОЛОГИЯ СТИЛІ */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: var(--gold);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+        }
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        .timeline-item.left { left: 0; }
+        .timeline-item.right { left: 50%; }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background-color: white;
+            border: 4px solid var(--dark-blue);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .timeline-item.right::after { left: -14px; }
+
+        .timeline-content {
+            padding: 20px;
+            background-color: var(--parchment);
+            border-radius: 6px;
+            border: 1px solid #eaddba;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            text-align: justify;
+        }
+        .timeline-content h4 {
+            margin-top: 0;
+            color: var(--dark-blue);
+            font-size: 1.2em;
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 5px;
+        }
+
+        /* ТҰЛҒАЛАР СТИЛІ */
+        .figures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .figure-card {
+            background: var(--parchment);
+            border: 2px solid var(--gold);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .figure-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+        .figure-card h4 {
+            color: var(--dark-blue);
+            font-size: 1.3em;
+            margin: 10px 0;
+        }
+
+        /* ТЕСТ СТИЛІ */
+        .quiz-question {
+            background-color: #f9f9f9;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 5px solid var(--dark-blue);
+            border-radius: 5px;
+        }
+        .quiz-question p {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .quiz-options label {
+            display: block;
+            margin: 10px 0;
+            cursor: pointer;
+            padding: 12px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        .quiz-options label:hover {
+            border-color: var(--gold);
+        }
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        /* ТЕСТ ТЕКСЕРІЛГЕННЕН КЕЙІНГІ СТИЛЬДЕР */
+        .correct-answer {
+            background-color: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724;
+        }
+        .wrong-answer {
+            background-color: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24;
+        }
+
+        .submit-btn {
+            background-color: var(--dark-blue);
+            color: var(--gold);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            display: block;
+            margin: 40px auto;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .submit-btn:hover {
+            background-color: var(--gold);
+            color: white;
+        }
+        #quiz-result {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--dark-blue);
+            color: white;
+            margin-top: 40px;
+        }
+
+        /* Ұялы телефондарға бейімдеу */
+        @media screen and (max-width: 768px) {
+            .timeline::after { left: 31px; }
+            .timeline-item { width: 100%; padding-left: 70px; padding-right: 25px; }
+            .timeline-item.right { left: 0%; }
+            .timeline-item.left::after, .timeline-item.right::after { left: 21px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Қазақстан Тарихы</h1>
+        <p style="font-style: italic; font-size: 1.2em;">Өткенді білмей, болашақты болжау мүмкін емес...</p>
+    </header>
+
+    <nav>
+        <button class="nav-btn active" onclick="openPage('home', this)">Басты бет</button>
+        <button class="nav-btn" onclick="openPage('chronology', this)">Хронология</button>
+        <button class="nav-btn" onclick="openPage('figures', this)">Тұлғалар</button>
+        <button class="nav-btn" onclick="openPage('quiz', this)">Тапсырмалар (Тест)</button>
+    </nav>
+
+    <div class="container">
+        
+        <!-- 1-БЕТ: БАСТЫ БЕТ -->
+        <section id="home" class="page-section" style="display: block;">
+            <h2>Тарихты не үшін білуіміз керек?</h2>
+            
+            <p style="font-size: 1.2em; text-align: justify;">
+                Қазақстан тарихы – бұл жай ғана даталар мен есімдер жиынтығы емес. Бұл – Ұлы Дала төсінде өмір сүрген, жері мен елін қорғау үшін қанын төккен бабаларымыздың рухы, өсиеті және аманаты. Тарихты білу – өзіңнің кім екеніңді, тамырыңның қайдан бастау алатынын түсіну.
+            </p>
+
+            <!-- Мотивациялық уақиға -->
+            <div class="story-box">
+                <h3>«Жер – Мемлекеттің Негізі» (Тарихи уақиға)</h3>
+                <p>
+                    Б.з.б. III ғасырда ғұн мемлекетінің іргесін қалаған Мөде қағанға көршілес дунху тайпасының елшілері келеді. Олар алдымен Мөденің ең жүйрік, қанатты тұлпарын сұрайды. Уәзірлері қарсы болса да, Мөде: "Көршімен бір жылқыға бола жауласпаймын", - деп тұлпарын береді. 
+                </p>
+                <p>
+                    Кейін дунхулар Мөденің сұлу әйелін сұрайды. Мөде тағы да: "Бір әйелге бола елді соғысқа ұшыратпаймын", - деп әйелін береді. 
+                </p>
+                <p>
+                    Үшінші рет елшілер келіп, екі ел арасындағы құмды, ешкім тұрмайтын тақыр, бос ЖЕРДІ сұрайды. Сонда Мөде қаған орнынан атып тұрып, қылышын суырып алады да: 
+                    <br><b>— Жылқы мен әйел өзімдікі еді, бердім. Ал ЖЕР — халықтікі, мемлекеттікі! Жер – мемлекеттің негізі! Оны ешкімге бермейміз!</b> — деп, қалың қолмен дунхуларға шабуыл жасап, оларды тас-талқан етіп жеңген екен.
+                </p>
+            </div>
+
+            <p style="font-size: 1.2em; text-align: justify;">
+                Осы аңыздан көріп отырғанымыздай, ұлан-ғайыр даламыз бізге оңайлықпен келген жоқ. Әр сүйем жер үшін батырларымыз жанын пида еткен. 
+            </p>
+
+            <blockquote style="font-size: 1.4em; border-left: 5px solid var(--dark-blue); padding-left: 20px; color: var(--dark-blue); font-weight: bold;">
+                «Тарихын білмеген ұлттың – болашағы бұлыңғыр. Өткенін ұмытқан халық – өшкен халық» 
+                <br><span style="font-size: 0.8em; color: gray;">— Бауыржан Момышұлы</span>
+            </blockquote>
+        </section>
+
+        <!-- 2-БЕТ: ХРОНОЛОГИЯ -->
+        <section id="chronology" class="page-section">
+            <h2>Толық Хронология: Ежелгі дәуірден Тәуелсіздікке дейін</h2>
+            <div class="timeline">
+                
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h4>Ежелгі дәуір (Б.з.б. 1 мыңжылдық – Б.з. V ғ.)</h4>
+                        <p><b>Сақтар, Үйсіндер, Қаңлылар және Ғұндар.</b> Ұлы даладағы алғашқы қуатты тайпалық одақтар. Парсы патшасы Кирдің әскерін тас-талқан еткен Томирис патшайымның ерлігі. Есік обасынан табылған "Алтын адам" — сақтардың зергерлік өнерінің шыңы. Мөде қаған бастаған ғұндардың Ұлы Қытай қорғанының салынуына себеп болуы.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h4>Орта ғасырлар және Түрік қағанаттары (VI - XIII ғғ.)</h4>
+                        <p><b>Түрік, Түргеш, Қарлұқ, Қарахан қағанаттары.</b> Күлтегін мен Білге қағанның тасқа қашалған Орхон-Енисей жазулары. Ұлы Жібек жолының гүлденуі. Ислам дінінің Қазақстан аумағына таралуы. Отырар (Фараб), Тараз, Испиджаб, Баласағұн сияқты ірі қалалардың ғылым мен білім орталығына айналуы.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h4>Алтын Орда дәуірі (XIII - XV ғғ.)</h4>
+                        <p><b>Шыңғыс хан империясы.</b> Жошы хан негізін қалаған алып Алтын Орда мемлекеті. Оның құрамында қыпшақ тайпаларының бірігуі. Кейіннен Алтын Орданың ыдырап, орнына Ақ Орда, Ноғай Ордасы, Әбілхайыр хандығы сияқты жаңа мемлекеттердің пайда болуы.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h4>Қазақ хандығының құрылуы мен дәуірлеуі (1465 - 1718 жж.)</h4>
+                        <p><b>Керей мен Жәнібектің</b> Шу мен Талас өңірінде Қазақ хандығының туын тігуі (1465 ж). <i>Қасым ханның қасқа жолы, Есім ханның ескі жолы, Тәуке ханның Жеті жарғысы</i> сияқты дала заңдарының қабылдануы. Қазақ елінің іргелі, қуатты мемлекетке айналуы.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h4>Жоңғар шапқыншылығы. Қаһармандық ғасыр (XVIII ғ.)</h4>
+                        <p><b>"Ақтабан шұбырынды, Алқакөл сұлама" (1723-1727 жж).</b> Жоңғарлардың тұқияннан шабуыл жасауы. Қазақ халқының бірігіп, Бұланты мен Аңырақай шайқастарында тарихи жеңіске жетуі. Абылай ханның дипломатиясы, Қабанбай, Бөгенбай, Райымбек батырлардың ерлігі.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h4>Ресей империясының құрамында (1731 - 1917 жж.)</h4>
+                        <p>Әбілқайыр ханның Кіші жүзді Ресейге қосуы. Отаршылдық саясатқа қарсы Ұлт-азаттық көтерілістер: Сырым Датұлы, Исатай мен Махамбет, Кенесары Қасымұлы бастаған қарулы күрестер.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h4>Алаш қозғалысы (XX ғасыр басы)</h4>
+                        <p>1917 жылы Әлихан Бөкейханов бастаған қазақ зиялыларының <b>"Алаш" партиясы</b> мен "Алашорда" автономиялық үкіметін құруы. Олардың мақсаты — қазақ елін өркениетті, тәуелсіз, білімді демократиялық ел қатарына қосу болды.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item right">
+                    <div class="timeline-content">
+                        <h4>Кеңес Одағы кезеңі (1920 - 1991 жж.)</h4>
+                        <p>Ауыр зұлмат жылдары: 1931-1933 жж. қолдан жасалған <b>Ашаршылық</b> (халықтың жартысы қырылды) және <b>1937 жылғы саяси қуғын-сүргін</b> (зияткерлердің атылуы). Ұлы Отан соғысындағы қазақстандықтардың ерлігі (Бауыржан, Әлия, Мәншүк). 1986 жылғы Желтоқсан көтерілісі.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item left">
+                    <div class="timeline-content">
+                        <h4>Тәуелсіз Қазақстан (1991 жылдан бері)</h4>
+                        <p>1991 жылы 16 желтоқсанда <b>Тәуелсіздік жарияланды</b>. Мемлекеттік рәміздер бекітіліп, ұлттық валюта — Теңге айналымға кірді. Елорда Астанаға көшірілді. Қазақстан халықаралық деңгейде танылған, шекарасы шегеленген бейбіт елге айналды.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 3-БЕТ: ТАРИХИ ТҰЛҒАЛАР -->
+        <section id="figures" class="page-section">
+            <h2>Тарихты Жасаған Ұлы Тұлғалар</h2>
+            
+            <h3 class="section-title">Қазақтың Ұлы Хандары</h3>
+            <div class="figures-grid">
+                <div class="figure-card">
+                    <h4>Керей мен Жәнібек</h4>
+                    <p>Қазақ хандығының негізін қалаушылар (1465 ж). Алғашқы тәуелсіз қазақ мемлекетінің туын көтерген сұлтандар.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Қасым хан</h4>
+                    <p>Хандықтың аумағын кеңейтіп, халық санын 1 миллионға жеткізген. "Қасым ханның қасқа жолы" заңын шығарған.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Тәуке хан</h4>
+                    <p>"Жеті жарғы" заңдар жинағын бекітіп, қазақ руларын біріктірген, билер кеңесін құрған дана билеуші.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Абылай хан</h4>
+                    <p>Жоңғар шапқыншылығы кезінде Ресей мен Цин (Қытай) империялары арасында керемет дипломатия жүргізген ұлы хан.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Кенесары хан</h4>
+                    <p>Қазақ хандығының ең соңғы ханы. 1837-1847 жж. Ресей отаршылдығына қарсы ең ірі ұлт-азаттық көтерілісті басқарды.</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">Қазақтың Үш Биі</h3>
+            <div class="figures-grid">
+                <div class="figure-card">
+                    <h4>Төле би</h4>
+                    <p>Ұлы жүздің бас биі, "Жеті жарғыны" жасаушылардың бірі. Әділдігімен, терең ақылымен ел есінде қалған.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Қазыбек би</h4>
+                    <p>Орта жүздің бас биі. Жоңғар қонтайшысы Қалдан Серенге барып, қазақтың намысын қорғап, елшілік қызмет атқарған "Қаз дауысты Қазыбек".</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Әйтеке би</h4>
+                    <p>Кіші жүздің бас биі. Сөзге шешен, қызыл тілдің шебері. Халықты ауызбіршілікке шақырған даңқты қайраткер.</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">Алаштың Бес Арысы</h3>
+            <div class="figures-grid">
+                <div class="figure-card">
+                    <h4>Әлихан Бөкейханов</h4>
+                    <p>Алаш партиясының көшбасшысы, Алашорда үкіметінің төрағасы. Ғұмырын қазақ азаттығына арнаған.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Ахмет Байтұрсынұлы</h4>
+                    <p>Ұлт ұстазы, тіл білімінің атасы. Тұңғыш қазақ әліпбиін (төте жазу) жасаушы, "Қазақ" газетінің бас редакторы.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Міржақып Дулатұлы</h4>
+                    <p>"Оян, қазақ!" өлеңдер жинағы арқылы халықтың рухын оятқан жазучы, қайраткер.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Мағжан Жұмабаев</h4>
+                    <p>Алаштың ұлы ақыны. "Мен жастарға сенемін" деп, ұлт болашағын жастармен байланыстырған лирик.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Шәкәрім Құдайбердіұлы</h4>
+                    <p>Абайдың інісі әрі шәкірті. Ұлы философ, тарихшы, ақын. "Түрік, қырғыз-қазақ һәм хандар шежіресінің" авторы.</p>
+                </div>
+            </div>
+
+            <h3 class="section-title">1937 жылғы репрессия құрбандары (Үш бәйтерек және басқалар)</h3>
+            <div class="figures-grid">
+                <div class="figure-card">
+                    <h4>Сәкен Сейфуллин</h4>
+                    <p>Қазақ әдебиетінің негізін қалаушылардың бірі, мемлекет қайраткері. "Тар жол, тайғақ кешу" романының авторы.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Ілияс Жансүгіров</h4>
+                    <p>Қазақ поэзиясының құлагері. "Құлагер" поэмасы арқылы қазақ әдебиетіне өлшеусіз үлес қосқан ұлы ақын.</p>
+                </div>
+                <div class="figure-card">
+                    <h4>Бейімбет Майлин</h4>
+                    <p>Қазақ прозасы мен драматургиясының шебері. Ауыл өмірін, қарапайым халықтың мұңын шынайы суреттеген жазушы.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4-БЕТ: ТЕСТ ТАПСЫРМАЛАРЫ -->
+        <section id="quiz" class="page-section">
+            <h2>Тапсырмалар: Біліміңізді тексеріңіз</h2>
+            <p style="text-align: center; font-size: 1.1em;">Тест 15 сұрақтан тұрады. Соңғы 5 сұрақ қазақ даналарының сөздеріне арналған.</p>
+            
+            <form id="historyQuiz">
+                
+                <!-- Тарихи сұрақтар -->
+                <div class="quiz-question"><p>1. Қазақ хандығы қай жылы құрылды?</p><div class="quiz-options">
+                    <label><input type="radio" name="q1" value="wrong"> 1227 ж</label>
+                    <label><input type="radio" name="q1" value="correct"> 1465 ж</label>
+                    <label><input type="radio" name="q1" value="wrong"> 1550 ж</label>
+                </div></div>
+
+                <div class="quiz-question"><p>2. Парсы патшасы Кирдің басын қанға толы меске салдырған сақ патшайымы?</p><div class="quiz-options">
+                    <label><input type="radio" name="q2" value="wrong"> Бопай ханым</label>
+                    <label><input type="radio" name="q2" value="wrong"> Зарина</label>
+                    <label><input type="radio" name="q2" value="correct"> Томирис (Тұмар)</label>
+                </div></div>
+
+                <div class="quiz-question"><p>3. Ақтабан шұбырынды, Алқакөл сұлама қай жылдары болды?</p><div class="quiz-options">
+                    <label><input type="radio" name="q3" value="correct"> 1723-1727 жж</label>
+                    <label><input type="radio" name="q3" value="wrong"> 1837-1847 жж</label>
+                    <label><input type="radio" name="q3" value="wrong"> 1773-1775 жж</label>
+                </div></div>
+
+                <div class="quiz-question"><p>4. Қазақ хандығының ең соңғы ханы кім?</p><div class="quiz-options">
+                    <label><input type="radio" name="q4" value="wrong"> Абылай хан</label>
+                    <label><input type="radio" name="q4" value="correct"> Кенесары хан</label>
+                    <label><input type="radio" name="q4" value="wrong"> Жәңгір хан</label>
+                </div></div>
+
+                <div class="quiz-question"><p>5. "Жеті жарғы" заңдар жинағын қай хан қабылдады?</p><div class="quiz-options">
+                    <label><input type="radio" name="q5" value="correct"> Тәуке хан</label>
+                    <label><input type="radio" name="q5" value="wrong"> Қасым хан</label>
+                    <label><input type="radio" name="q5" value="wrong"> Есім хан</label>
+                </div></div>
+
+                <div class="quiz-question"><p>6. Алашорда үкіметінің төрағасы кім болды?</p><div class="quiz-options">
+                    <label><input type="radio" name="q6" value="wrong"> Ахмет Байтұрсынұлы</label>
+                    <label><input type="radio" name="q6" value="correct"> Әлихан Бөкейханов</label>
+                    <label><input type="radio" name="q6" value="wrong"> Мағжан Жұмабаев</label>
+                </div></div>
+
+                <div class="quiz-question"><p>7. Кіші жүз Ресей империясына қай жылы қосылды?</p><div class="quiz-options">
+                    <label><input type="radio" name="q7" value="correct"> 1731 ж</label>
+                    <label><input type="radio" name="q7" value="wrong"> 1822 ж</label>
+                    <label><input type="radio" name="q7" value="wrong"> 1715 ж</label>
+                </div></div>
+
+                <div class="quiz-question"><p>8. Түрік қағанатының құрылған жылы?</p><div class="quiz-options">
+                    <label><input type="radio" name="q8" value="wrong"> 603 ж</label>
+                    <label><input type="radio" name="q8" value="correct"> 552 ж</label>
+                    <label><input type="radio" name="q8" value="wrong"> 751 ж</label>
+                </div></div>
+
+                <div class="quiz-question"><p>9. 1986 жылғы Желтоқсан көтерілісі қай қалада болды?</p><div class="quiz-options">
+                    <label><input type="radio" name="q9" value="correct"> Алматы</label>
+                    <label><input type="radio" name="q9" value="wrong"> Астана</label>
+                    <label><input type="radio" name="q9" value="wrong"> Қарағанды</label>
+                </div></div>
+
+                <div class="quiz-question"><p>10. Қазақстанның Тәуелсіздік күні?</p><div class="quiz-options">
+                    <label><input type="radio" name="q10" value="wrong"> 25 қазан</label>
+                    <label><input type="radio" name="q10" value="wrong"> 30 тамыз</label>
+                    <label><input type="radio" name="q10" value="correct"> 16 желтоқсан</label>
+                </div></div>
+
+                <!-- Даналардың сөздері / Цитаталар -->
+                <h3 class="section-title">Кімнің сөзі? (Логикалық тапсырмалар)</h3>
+
+                <div class="quiz-question"><p>11. Мөде қағанның әйгілі сөзін толықтырыңыз: "... – мемлекеттің негізі, оны ешкімге бермейміз!"</p><div class="quiz-options">
+                    <label><input type="radio" name="q11" value="wrong"> Алтын</label>
+                    <label><input type="radio" name="q11" value="correct"> Жер</label>
+                    <label><input type="radio" name="q11" value="wrong"> Жылқы</label>
+                </div></div>
+
+                <div class="quiz-question"><p>12. "Оян, қазақ!" өлеңі арқылы халықты білімге, еркіндікке шақырған кім?</p><div class="quiz-options">
+                    <label><input type="radio" name="q12" value="wrong"> Абай Құнанбайұлы</label>
+                    <label><input type="radio" name="q12" value="wrong"> Шәкәрім Құдайбердіұлы</label>
+                    <label><input type="radio" name="q12" value="correct"> Міржақып Дулатұлы</label>
+                </div></div>
+
+                <div class="quiz-question"><p>13. Ахмет Байтұрсынұлы: "Ұлттың сақталуына да, жойылуына да себеп болатын нәрсе – ..."</p><div class="quiz-options">
+                    <label><input type="radio" name="q13" value="correct"> Тіл</label>
+                    <label><input type="radio" name="q13" value="wrong"> Байлық</label>
+                    <label><input type="radio" name="q13" value="wrong"> Шекара</label>
+                </div></div>
+
+                <div class="quiz-question"><p>14. "Тірі болсам, хан баласында қазақтың хақысы бар еді, қазаққа қызмет қылмай қоймаймын" - деп ант еткен Алаш көшбасшысы кім?</p><div class="quiz-options">
+                    <label><input type="radio" name="q14" value="wrong"> Шоқан Уәлиханов</label>
+                    <label><input type="radio" name="q14" value="correct"> Әлихан Бөкейханов</label>
+                    <label><input type="radio" name="q14" value="wrong"> Сәкен Сейфуллин</label>
+                </div></div>
+
+                <div class="quiz-question"><p>15. "Сен де бір кірпіш дүниеге, Кетігін тап та, бар қалан!" - деп жастарға өсиет қалдырған ұлы ақын кім?</p><div class="quiz-options">
+                    <label><input type="radio" name="q15" value="correct"> Абай Құнанбайұлы</label>
+                    <label><input type="radio" name="q15" value="wrong"> Мағжан Жұмабаев</label>
+                    <label><input type="radio" name="q15" value="wrong"> Жамбыл Жабаев</label>
+                </div></div>
+
+                <button type="button" class="submit-btn" onclick="checkQuiz()">Жауаптарды Тексеру</button>
+            </form>
+
+            <div id="quiz-result"></div>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Қазақстан Тарихы Интерактивті Порталы.</p>
+    </footer>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        function openPage(pageId, btn) {
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => { section.style.display = 'none'; });
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(button => { button.classList.remove('active'); });
+            document.getElementById(pageId).style.display = 'block';
+            btn.classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        function checkQuiz() {
+            let score = 0;
+            const totalQuestions = 15;
+            const resultDiv = document.getElementById('quiz-result');
+            
+            // Алдымен барлық сұраққа жауап берілгенін тексеру
+            let allAnswered = true;
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (!document.querySelector('input[name="q' + i + '"]:checked')) {
+                    allAnswered = false;
+                    break;
+                }
+            }
+
+            if (!allAnswered) {
+                alert("Өтініш, тексеру үшін барлық 15 сұраққа толық жауап беріңіз!");
+                return;
+            }
+
+            // Жауаптарды тексеру және бояу
+            for (let i = 1; i <= totalQuestions; i++) {
+                let options = document.getElementsByName('q' + i);
+                
+                options.forEach(opt => {
+                    let label = opt.parentElement;
+                    // Бұрынғы түстерді алып тастау
+                    label.classList.remove('correct-answer', 'wrong-answer');
+                    // Қайта өзгерте алмауы үшін бұғаттау
+                    opt.disabled = true; 
+
+                    // Егер қолданушы таңдаған болса:
+                    if (opt.checked) {
+                        if (opt.value === 'correct') {
+                            score++;
+                        } else {
+                            // Қате таңдау қызылмен боялады
+                            label.classList.add('wrong-answer');
+                        }
+                    }
+
+                    // Дұрыс жауап міндетті түрде жасылмен боялады (көрсету үшін)
+                    if (opt.value === 'correct') {
+                        label.classList.add('correct-answer');
+                    }
+                });
+            }
+
+            // Нәтижені шығару
+            document.querySelector('.submit-btn').style.display = 'none'; // Батырманы жасыру
+            
+            if (score === totalQuestions) {
+                resultDiv.style.backgroundColor = "#d4edda";
+                resultDiv.style.color = "#155724";
+                resultDiv.innerText = "Керемет! Сіз тарихты өте жақсы білесіз! (15/15)";
+            } else if (score >= 10) {
+                resultDiv.style.backgroundColor = "#fff3cd";
+                resultDiv.style.color = "#856404";
+                resultDiv.innerText = "Жақсы нәтиже! Сіздің ұпайыңыз: " + score + " / " + totalQuestions + ".\nЖасылмен белгіленген дұрыс жауаптарға назар аударыңыз.";
+            } else {
+                resultDiv.style.backgroundColor = "#f8d7da";
+                resultDiv.style.color = "#721c24";
+                resultDiv.innerText = "Нәтиже: " + score + " / " + totalQuestions + ".\nҚызыл түс - қате, Жасыл түс - дұрыс жауап. Тарихты сәл қайталау қажет!";
+            }
+        }
+    </script>
+</body>
+</html>
